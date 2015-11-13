@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     private static final String SHARED_PREFERENCES_TODOS = "SP_TODOS";
     private static final String TODO_LIST = "todo_list";
     private Gson gson;
+    public TodoArrayList tasks;
 
     @Override
     protected void onDestroy() {
@@ -38,6 +39,16 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences todos = getSharedPreferences(SHARED_PREFERENCES_TODOS, 0);
         String todoList = todos.getString(TODO_LIST, null);
 
+        if (todoList == null) {
+            String initial_json = "[{\"nane\";\"Comprar llet\", \"done\": \"true\", \"priority\": 2},\n" +
+                    "        {\"nane\";\"Comprar pa\", \"done\": \"true\", \"priority\": 1},\n" +
+                    "        {\"nane\";\"Fer exercisi\", \"done\": \"true\", \"priority\": 3}]";
+            SharedPreferences.Editor editor = todos.edit();
+            editor.putString(SHARED_PREFERENCES_TODOS, initial_json);
+            editor.commit();
+            todoList = todos.getString(TODO_LIST,null);
+        }
+
         gson = new Gson();
         /*
         [
@@ -49,12 +60,17 @@ public class MainActivity extends AppCompatActivity
         Object objectTodoList = new Object();
 
         Type arrayTodoList = new TypeToken<TodoArrayList>() {}.getType();
-
-        gson.fromJson(todoList, arrayTodoList);
+        TodoArrayList temp = gson.fromJson(todoList, arrayTodoList);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (temp != null){
+            tasks = temp;
+        }else{
+            //Error TODO
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
