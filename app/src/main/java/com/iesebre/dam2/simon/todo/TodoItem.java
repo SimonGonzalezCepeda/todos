@@ -1,5 +1,7 @@
 package com.iesebre.dam2.simon.todo;
 
+import com.google.gson.Gson;
+
 /**
  * Created by sylver on 13/11/15.
  */
@@ -36,5 +38,16 @@ public class TodoItem {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    @Override
+    public String toString() {
+        return "{name:" + name + ", done: " + done + ", priority; "
+                + priority + "}";
+    }
+
+    public String serialize(){
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }
