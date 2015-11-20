@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,16 +43,19 @@ public class MainActivity extends AppCompatActivity
         String todoList = todos.getString(TODO_LIST, null);
 
         if (todoList == null) {
-            String initial_json = "[{\"nane\";\"Comprar llet\", \"done\": \"true\", \"priority\": 2},\n" +
-                    "        {\"nane\";\"Comprar pa\", \"done\": \"true\", \"priority\": 1},\n" +
-                    "        {\"nane\";\"Fer exercisi\", \"done\": \"true\", \"priority\": 3}]";
+            String initial_json = "[{\"nane\":\"Comprar llet\", \"done\": \"true\", \"priority\": 2},\n" +
+                    "        {\"nane\":\"Comprar pa\", \"done\": \"true\", \"priority\": 1},\n" +
+                    "        {\"nane\":\"Fer exercisi\", \"done\": \"true\", \"priority\": 3}]";
             SharedPreferences.Editor editor = todos.edit();
-            editor.putString(SHARED_PREFERENCES_TODOS, initial_json);
+            editor.putString(TODO_LIST, initial_json);
             editor.commit();
             todoList = todos.getString(TODO_LIST,null);
         }
 
-        gson = new Gson();
+        Log.d("TAG_PROVA", todoList);
+        //Toast.makeText(this,todoList,Toast.LENGTH_LONG).show();
+
+        this.gson = new Gson();
         /*
         [
         {"nane";"Comprar llet", "done": "true", "priority": 2},
@@ -59,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         */
         Object objectTodoList = new Object();
 
-        Type arrayTodoList = new TypeToken<TodoArrayList>() {}.getType();
+        Type arrayTodoList = new TypeToken<TodoArrayList>(){}.getType();
         TodoArrayList temp = gson.fromJson(todoList, arrayTodoList);
 
 
@@ -71,6 +77,15 @@ public class MainActivity extends AppCompatActivity
         }else{
             //Error TODO
         }
+
+        ListView todoslv = (ListView)findViewById(R.id.todolistview);
+
+        adapter = new CustomListAdapter (this,tasks);
+        todoslv.setAdapter(adapter);
+
+        Toolbar toolbar = (Toolbar)
+                findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
