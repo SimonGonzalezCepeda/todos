@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         ListView todoslv = (ListView)findViewById(R.id.todolistview);
 
-        adapter = new CustomListAdapter (this,tasks);
+        CustomListAdapter adapter = new CustomListAdapter(this, tasks);
         todoslv.setAdapter(adapter);
 
         Toolbar toolbar = (Toolbar)
